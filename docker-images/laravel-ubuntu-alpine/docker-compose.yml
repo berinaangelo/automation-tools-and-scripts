@@ -1,0 +1,114 @@
+x-app: &app
+  build:
+    context: .
+    dockerfile: Dockerfile
+  image: accounting-inventory:local
+  env_file:
+    - .env
+  restart: unless-stopped
+
+x-app-env: &app-env
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_PORT: 3306
+  DB_DATABASE: ${DB_DATABASE:-accounting_inventory}
+  DB_USERNAME: ${DB_USERNAME:-axiom}
+  DB_PASSWORD: ${DB_PASSWORD:-secret}
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-accounting_inventory}
+      MYSQL_USER: ${DB_USERNAME:-axiom}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secret}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${DB_ROOT_PASSWORD:-secret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    <<: *app
+    restart: "no"
+    environment: *app-env
+    command: ["php", "artisan", "migrate", "--force"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+
+  web:
+    <<: *app
+    environment:
+      <<: *app-env
+      APP_CONTAINER: web
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${APP_PORT:-8000}:80"
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+
+  horizon:
+    <<: *app
+    environment:
+      <<: *app-env
+      APP_CONTAINER: horizon
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+
+  websocket:
+    <<: *app
+    environment:
+      <<: *app-env
+      APP_CONTAINER: websocket
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${REVERB_PORT:-8080}:8080"
+
+  cron:
+    <<: *app
+    environment:
+      <<: *app-env
+      APP_CONTAINER: cron
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+
+volumes:
+  mysql-data:
+  redis-data:

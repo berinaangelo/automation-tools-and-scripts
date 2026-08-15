@@ -1,0 +1,12 @@
+{
+    "workbench.colorTheme": "Solarized Dark+",
+    "php.validate.executablePath": "/opt/homebrew/bin/php",
+    "editor.stickyScroll.enabled": false,
+    "files.associations": {
+        "*.sass": "scss"
+    },
+    "claudeCode.preferredLocation": "panel",
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "Fira Code",
+    "editor.fontSize": 14
+}

@@ -1,0 +1,85 @@
+# Single-container alternative to docker-compose.yml, for anyone who wants
+# one process footprint instead of the 4-way web/horizon/websocket/cron split.
+# Usage: docker compose -f docker-compose.all-in-one.yml up -d --build
+x-app-env: &app-env
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_PORT: 3306
+  DB_DATABASE: ${DB_DATABASE:-accounting_inventory}
+  DB_USERNAME: ${DB_USERNAME:-axiom}
+  DB_PASSWORD: ${DB_PASSWORD:-secret}
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-accounting_inventory}
+      MYSQL_USER: ${DB_USERNAME:-axiom}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secret}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${DB_ROOT_PASSWORD:-secret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: accounting-inventory:local
+    env_file:
+      - .env
+    restart: "no"
+    environment: *app-env
+    command: ["php", "artisan", "migrate", "--force"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: accounting-inventory:local
+    env_file:
+      - .env
+    restart: unless-stopped
+    environment:
+      <<: *app-env
+      APP_CONTAINER: all
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "${APP_PORT:-8000}:80"
+      - "${REVERB_PORT:-8080}:8080"
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+
+volumes:
+  mysql-data:
+  redis-data:
