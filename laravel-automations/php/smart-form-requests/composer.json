@@ -1,0 +1,44 @@
+{
+    "name": "kornbip69/laravel-smart-form-requests",
+    "description": "A make:smart-form-request Artisan command that generates Store/Update FormRequest pairs with rules inferred from an Eloquent model, a DB table, or an explicit field list, including foreign-key exists: rules and unique-with-ignore() on update.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "form-request", "validation", "artisan", "scaffolding", "codegen"],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../smart-migrations"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "kornbip69/laravel-smart-migrations": "*",
+        "illuminate/console": "^10.0|^11.0|^12.0",
+        "illuminate/database": "^10.0|^11.0|^12.0",
+        "illuminate/filesystem": "^10.0|^11.0|^12.0",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/validation": "^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "SmartFormRequests\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SmartFormRequests\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SmartFormRequests\\SmartFormRequestsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

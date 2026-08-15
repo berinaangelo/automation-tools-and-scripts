@@ -13,3 +13,6 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# scripts/ local configs (real paths/credentials, per-machine)
+scripts/**/config.sh
