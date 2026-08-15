@@ -1,0 +1,25 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+
+cloud_provider = "aws"
+project_name   = "system-setup"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+# --- AWS ---
+aws_region        = "us-east-1"
+aws_instance_type = "t3.micro"
+
+# --- GCP ---
+# gcp_project_id   = "my-gcp-project"
+# gcp_region       = "us-central1"
+# gcp_zone         = "us-central1-a"
+# gcp_machine_type = "e2-micro"
+
+# --- Azure ---
+# azure_location = "eastus"
+# azure_vm_size  = "Standard_B1s"
