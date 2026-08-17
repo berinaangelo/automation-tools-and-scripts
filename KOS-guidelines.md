@@ -107,7 +107,21 @@ Place at KOS root so any Claude Code session opened there auto-understands the s
 When asked to save something here: check INDEX.md for an existing
 note to update before creating a new one. Always add new notes to
 INDEX.md.
+
+When answering a question:
+- Read INDEX.md, then open only the notes that look relevant.
+- Answer using only what's in those notes. If the KOS has nothing
+  on this, say "not in the KOS" explicitly — do not fill the gap
+  from general knowledge.
+- End every answer with a "Sources:" line listing the file paths
+  actually read. No sources = answer came from training data, not
+  the KOS — flag that.
 ```
+
+Grounding this way is what makes the difference — retrieving a note into
+context doesn't stop Claude from blending in general training data on top
+of it. The "Sources:" line is the only reliable tell: no cited path means
+the answer wasn't actually grounded, no matter how specific it sounds.
 
 ## Versioning
 
