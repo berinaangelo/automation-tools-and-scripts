@@ -1,0 +1,35 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+
+cloud_provider = "aws"
+project_name   = "iam"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+# --- AWS ---
+aws_region              = "us-east-1"
+aws_iam_role_name        = null # falls back to "<project_name>-<environment>"
+aws_iam_trusted_service = "ec2.amazonaws.com" # or "ecs-tasks.amazonaws.com", "lambda.amazonaws.com", etc.
+aws_iam_managed_policy_arns = [
+  "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+]
+# aws_iam_inline_policy_json = null
+
+# --- GCP ---
+# gcp_project_id         = "my-gcp-project"
+# gcp_service_account_id = null
+# gcp_iam_roles           = ["roles/storage.objectViewer"]
+
+# --- Azure ---
+# azure_location        = "eastus"
+# azure_identity_name   = null
+# azure_role_assignments = {
+#   storage_reader = {
+#     role_definition_name = "Storage Blob Data Reader"
+#     scope                 = "/subscriptions/.../resourceGroups/..."
+#   }
+# }

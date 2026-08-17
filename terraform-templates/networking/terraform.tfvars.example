@@ -1,0 +1,32 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+
+cloud_provider = "aws"
+project_name   = "networking"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+# --- AWS ---
+aws_region                = "us-east-1"
+aws_vpc_cidr               = "10.0.0.0/16"
+aws_public_subnet_cidrs   = ["10.0.0.0/24", "10.0.1.0/24"]
+aws_private_subnet_cidrs  = ["10.0.10.0/24", "10.0.11.0/24"]
+# aws_availability_zones  = ["us-east-1a", "us-east-1b"] # leave unset to auto-select
+aws_single_nat_gateway     = true
+aws_enable_dns_hostnames  = true
+
+# --- GCP ---
+# gcp_project_id          = "my-gcp-project"
+# gcp_region              = "us-central1"
+# gcp_public_subnet_cidr  = "10.10.0.0/24"
+# gcp_private_subnet_cidr = "10.10.10.0/24"
+
+# --- Azure ---
+# azure_location            = "eastus"
+# azure_vnet_cidr           = "10.20.0.0/16"
+# azure_public_subnet_cidr  = "10.20.0.0/24"
+# azure_private_subnet_cidr = "10.20.10.0/24"

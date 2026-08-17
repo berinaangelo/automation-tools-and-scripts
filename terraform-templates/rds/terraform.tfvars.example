@@ -1,0 +1,46 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs, passwords, or other
+# secrets in it. Prefer TF_VAR_* environment variables for passwords over
+# putting them in this file at all, e.g.:
+#   export TF_VAR_aws_db_password="..."
+
+cloud_provider = "aws"
+project_name   = "rds"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+multi_az = false
+
+# --- AWS ---
+aws_region             = "us-east-1"
+aws_db_engine          = "postgres" # or "mysql", "mariadb", etc. — user-defined, see variables.tf
+aws_db_engine_version  = null       # leave null for the current default version of the chosen engine
+aws_db_instance_class  = "db.t3.micro"
+aws_db_allocated_storage = 20
+aws_db_storage_type    = "gp3"
+aws_db_name            = "app"
+aws_db_username        = "admin"
+# aws_db_password       = "set via TF_VAR_aws_db_password instead"
+aws_db_subnet_group_subnet_ids = ["subnet-xxxxxxxx", "subnet-yyyyyyyy"]
+aws_vpc_security_group_ids     = ["sg-xxxxxxxx"]
+aws_publicly_accessible        = false
+aws_backup_retention_period    = 7
+aws_skip_final_snapshot        = true
+
+# --- GCP ---
+# gcp_project_id = "my-gcp-project"
+# gcp_region     = "us-central1"
+# gcp_db_version = "POSTGRES_16"
+# gcp_db_tier    = "db-f1-micro"
+# gcp_db_password = "set via TF_VAR_gcp_db_password instead"
+
+# --- Azure ---
+# azure_location          = "eastus"
+# azure_db_sku_name       = "B_Standard_B1ms"
+# azure_db_admin_username = "dbadmin"
+# azure_db_admin_password = "set via TF_VAR_azure_db_admin_password instead"
+# azure_db_version        = "16"

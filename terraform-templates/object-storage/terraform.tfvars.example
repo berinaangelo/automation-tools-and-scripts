@@ -1,0 +1,29 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+
+cloud_provider = "aws"
+project_name   = "object-storage"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+enable_cdn = false
+
+# --- AWS ---
+aws_region             = "us-east-1"
+aws_bucket_name         = "your-globally-unique-bucket-name"
+aws_enable_versioning   = true
+aws_cdn_price_class     = "PriceClass_100"
+
+# --- GCP ---
+# gcp_project_id = "my-gcp-project"
+# gcp_region     = "us-central1"
+# gcp_bucket_name = "your-globally-unique-bucket-name"
+
+# --- Azure ---
+# azure_location             = "eastus"
+# azure_storage_account_name = "yourglobstoracct" # lowercase alphanumeric only
+# azure_container_name       = "data"

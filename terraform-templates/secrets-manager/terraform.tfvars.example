@@ -1,0 +1,36 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+#
+# Prefer TF_VAR_* environment variables over putting the secret value in
+# this file at all — Terraform state will contain it in plaintext either
+# way, but there's no reason to also risk it landing in this file:
+#   export TF_VAR_aws_secret_value="..."
+
+cloud_provider = "aws"
+project_name   = "secrets-manager"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+secret_description = "Describe what this secret is for"
+
+# --- AWS ---
+aws_region                  = "us-east-1"
+aws_secret_name              = null # falls back to "<project_name>-<environment>"
+# aws_secret_value           = "set via TF_VAR_aws_secret_value instead"
+aws_recovery_window_in_days = 7
+
+# --- GCP ---
+# gcp_project_id  = "my-gcp-project"
+# gcp_secret_id    = null
+# gcp_secret_value = "set via TF_VAR_gcp_secret_value instead"
+
+# --- Azure ---
+# azure_location        = "eastus"
+# azure_key_vault_name   = "your-globally-unique-vault"
+# azure_tenant_id        = "00000000-0000-0000-0000-000000000000"
+# azure_secret_name      = null
+# azure_secret_value     = "set via TF_VAR_azure_secret_value instead"

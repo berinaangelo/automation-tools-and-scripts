@@ -1,0 +1,38 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+
+cloud_provider = "aws"
+project_name   = "autoscaling"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+min_size                = 1
+max_size                = 3
+desired_capacity        = 1
+target_cpu_utilization  = 60
+
+# --- AWS ---
+aws_region               = "us-east-1"
+aws_instance_type        = "t3.micro"
+aws_ami_id                = "ami-0c101f26f147fa7fd" # pin to a real AMI for your region
+aws_vpc_zone_identifiers = ["subnet-xxxxxxxx", "subnet-yyyyyyyy"]
+aws_health_check_type    = "EC2"
+# aws_target_group_arns  = ["arn:aws:elasticloadbalancing:...:targetgroup/..."]
+
+# --- GCP ---
+# gcp_project_id   = "my-gcp-project"
+# gcp_region       = "us-central1"
+# gcp_zone         = "us-central1-a"
+# gcp_machine_type = "e2-micro"
+# gcp_network      = "default"
+
+# --- Azure ---
+# azure_location             = "eastus"
+# azure_vm_size               = "Standard_B1s"
+# azure_admin_username        = "azureuser"
+# azure_admin_ssh_public_key  = "ssh-rsa AAAA..."
+# azure_subnet_id             = "/subscriptions/.../subnets/..."

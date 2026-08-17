@@ -1,0 +1,43 @@
+# Copy to terraform.tfvars and fill in for your system. terraform.tfvars is
+# gitignored — never commit real account/project IDs or secrets in it.
+
+cloud_provider = "aws"
+project_name   = "container-orchestration"
+environment    = "dev"
+
+tags = {
+  ManagedBy = "terraform"
+  Owner     = "your-name"
+}
+
+container_port = 80
+container_environment_variables = {
+  # APP_ENV = "production"
+}
+desired_count = 1
+
+# --- AWS (ECS Fargate) ---
+aws_region       = "us-east-1"
+aws_container_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/your-app:latest"
+aws_cpu           = "256"
+aws_memory        = "512"
+aws_subnet_ids    = ["subnet-xxxxxxxx", "subnet-yyyyyyyy"] # from the networking template's private_subnet_ids output
+aws_security_group_ids = ["sg-xxxxxxxx"]                    # from the networking template's internal_security_group_id output
+aws_assign_public_ip   = false
+# aws_target_group_arn = "arn:aws:elasticloadbalancing:...:targetgroup/..." # from the load-balancer template
+# aws_task_role_arn    = "arn:aws:iam::...:role/..."                        # from the iam template
+aws_log_retention_days = 14
+
+# --- GCP (Cloud Run) ---
+# gcp_project_id            = "my-gcp-project"
+# gcp_region                = "us-central1"
+# gcp_container_image       = "us-central1-docker.pkg.dev/my-project/repo/app:latest"
+# gcp_cpu                    = "1"
+# gcp_memory                 = "512Mi"
+# gcp_allow_unauthenticated  = false
+
+# --- Azure (Container Apps) ---
+# azure_location        = "eastus"
+# azure_container_image = "myregistry.azurecr.io/app:latest"
+# azure_cpu             = 0.5
+# azure_memory           = "1Gi"
